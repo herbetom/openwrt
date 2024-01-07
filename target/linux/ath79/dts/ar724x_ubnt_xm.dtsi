@@ -22,6 +22,7 @@
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <25000000>;
+		swp-disable;
 
 		partitions {
 			compatible = "fixed-partitions";
