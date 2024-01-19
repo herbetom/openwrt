@@ -14,8 +14,10 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  drivers/mtd/spi-nor/core.c | 2 +++
  1 file changed, 3 insertions(+)
 
---- a/drivers/mtd/spi-nor/core.c
-+++ b/drivers/mtd/spi-nor/core.c
+Index: linux-5.15.147/drivers/mtd/spi-nor/core.c
+===================================================================
+--- linux-5.15.147.orig/drivers/mtd/spi-nor/core.c
++++ linux-5.15.147/drivers/mtd/spi-nor/core.c
 @@ -2820,6 +2820,7 @@ static int spi_nor_quad_enable(struct sp
  
  static int spi_nor_init(struct spi_nor *nor)
@@ -24,11 +26,19 @@ Signed-off-by: David Bauer <mail@david-bauer.net>
  	int err;
  
  	err = spi_nor_octal_dtr_enable(nor, true);
-@@ -2845,6 +2846,7 @@ static int spi_nor_init(struct spi_nor *
+@@ -2844,10 +2845,14 @@ static int spi_nor_init(struct spi_nor *
+ 	 * protection bits are volatile. The latter is indicated by
  	 * SNOR_F_SWP_IS_VOLATILE.
  	 */
++	printk("checking for unconditional unlock");
  	if (IS_ENABLED(CONFIG_MTD_SPI_NOR_SWP_DISABLE) ||
 +	    of_property_read_bool(np, "swp-disable") ||
  	    (IS_ENABLED(CONFIG_MTD_SPI_NOR_SWP_DISABLE_ON_VOLATILE) &&
- 	     nor->flags & SNOR_F_SWP_IS_VOLATILE))
+-	     nor->flags & SNOR_F_SWP_IS_VOLATILE))
++	     nor->flags & SNOR_F_SWP_IS_VOLATILE)) {
++		printk("unconditional unlocking");
  		spi_nor_try_unlock_all(nor);
++	}
+ 
+ 	if (nor->addr_width == 4 &&
+ 	    nor->read_proto != SNOR_PROTO_8_8_8_DTR &&
